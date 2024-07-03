@@ -1,22 +1,16 @@
-// BasicosConfig.js
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { InputText2 } from "../formularios/InputText2";
 import { Btn1 } from "../../moleculas/Btn1";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEmpresaStore } from "../../../store/EmpresaStore";
-import { toast } from "sonner";
-import {slideBackground} from "../../../styles/keyframes"
-
 export const BasicosConfig = () => {
   const [file, setFile] = useState([]);
   const ref = useRef(null);
-  const { editarEmpresa, dataempresa } = useEmpresaStore();
   const [fileurl, setFileurl] = useState("-");
+  const { dataempresa } = useEmpresaStore();
 
-  const queryClient = useQueryClient();
   const {
     register,
     formState: { errors },
@@ -24,28 +18,6 @@ export const BasicosConfig = () => {
     watch,
   } = useForm();
 
-  const { mutate: doEditar, isPending } = useMutation({
-    mutationFn: editar,
-    mutationKey: "editar empresa",
-    onError: (e) => console.log("Error: ", e.message),
-    onSuccess: () => {
-      toast.success("Datos guardados");
-      queryClient.invalidateQueries("mostrar empresa");
-    },
-  });
-  const handlesub = (data) => {
-    doEditar(data);
-  };
-  async function editar(data) {
-    const p = {
-      id: dataempresa?.id,
-      nombre: data.nombre,
-      direccion_fiscal: data.direccion,
-      impuesto: data.impuesto,
-      valor_impuesto: parseFloat(data.valor_impuesto),
-    };
-    await editarEmpresa(p, dataempresa?.logo, file);
-  }
   function abrirImagenes() {
     ref.current.click();
   }
@@ -64,109 +36,99 @@ export const BasicosConfig = () => {
 
   return (
     <Container>
-      {isPending ? (
-        <span>guardando...🐖</span>
-      ) : (
-        <>
-          <Title>Básico</Title>
-{
-  watch("nombre")
-}
-          <Avatar>
-            <span className="nombre">
-              {dataempresa?.nombre}
-            </span>
-            {fileurl != "-" ? (
-              <div className="ContentImage">
-                <AvatarImage src={fileurl} alt="Avatar" />
-              </div>
-            ) : dataempresa?.logo != "-" ? (
-              <div className="ContentImage">
-                <AvatarImage src={dataempresa?.logo} alt="Avatar" />
-              </div>
-            ) : (
-              <AvatarImage
-                src="https://i.ibb.co/JjqNqnz/cerdosolo.png"
-                alt="Avatar"
-              />
-            )}
+      <Title>Básico</Title>
 
-            <EditButton onClick={abrirImagenes}>
-              <Icon className=" icono" icon="lets-icons:edit-fill" />
-            </EditButton>
-            <input accept="image/jpeg, image/png"
-              type="file"
-              ref={ref}
-              onChange={(e) => prepararImagen(e)}
-            ></input>
-          </Avatar>
-          <form onSubmit={handleSubmit(handlesub)}>
-            <Label>Nombre</Label>
-            <InputText2>
-              <input
-                className="form__field"
-                placeholder="nombre"
-                type="text"
-                defaultValue={dataempresa?.nombre}
-                {...register("nombre", {
-                  required: true,
-                })}
-              />
-              {errors.nombre?.type === "required" && <p>Campo requerido</p>}
-            </InputText2>
-            <Label>Dirección</Label>
-            <InputText2>
-              <input
-                defaultValue={dataempresa?.direccion_fiscal}
-                className="form__field"
-                placeholder="direccion"
-                type="text"
-                {...register("direccion", {
-                  required: true,
-                })}
-              />
-              {errors.direccion?.type === "required" && <p>Campo requerido</p>}
-            </InputText2>
-            <Label>Impuesto</Label>
-            <InputText2>
-              <input
-                defaultValue={dataempresa?.impuesto}
-                className="form__field"
-                placeholder="impuesto"
-                type="text"
-                {...register("impuesto", {
-                  required: true,
-                })}
-              />
-              {errors.impuesto?.type === "required" && <p>Campo requerido</p>}
-            </InputText2>
-            <Label>Valor impuesto</Label>
-            <InputText2>
-              <input
-                step="0.01"
-                defaultValue={dataempresa?.valor_impuesto}
-                className="form__field"
-                placeholder="valor impuesto"
-                type="number"
-                {...register("valor_impuesto", {
-                  required: true,
-                })}
-              />
-              {errors.valor_impuesto?.type === "required" && (
-                <p>Campo requerido</p>
-              )}
-            </InputText2>
-            <br></br>
-            <Btn1 bgcolor="#0930bb" color="#fff" titulo="GUARDAR CAMBIOS" />
-          </form>
-          <br></br>
-          <section className="advertencia">
-          <Icon className="icono" icon="meteocons:barometer" />
-             <span>los cambios de logo se ven reflejados en el lapso de 10 segundos.</span>
-          </section>
-         
-        </>
-      )}
+      <Avatar>
+        <span className="nombre">Empresa nombre</span>
+        {fileurl != "-" ? (
+          <div className="ContentImage">
+            <AvatarImage src={fileurl} alt="Avatar" />
+          </div>
+        ) : dataempresa?.logo != "-" ? (
+          <div className="ContentImage">
+            <AvatarImage src={dataempresa?.logo} alt="Avatar" />
+          </div>
+        ) : (
+          <AvatarImage
+            src="https://i.ibb.co/JjqNqnz/cerdosolo.png"
+            alt="Avatar"
+          />
+        )}
+
+        <EditButton onClick={abrirImagenes}>
+          <Icon className=" icono" icon="lets-icons:edit-fill" />
+        </EditButton>
+        <input
+          accept="image/jpeg, image/png"
+          type="file"
+          ref={ref}
+          onChange={(e) => prepararImagen(e)}
+        ></input>
+      </Avatar>
+      <form>
+        <Label>Nombre</Label>
+        <InputText2>
+          <input
+            className="form__field"
+            placeholder="nombre"
+            type="text"
+            defaultValue={dataempresa?.nombre}
+            {...register("nombre", {
+              required: true,
+            })}
+          />
+          {errors.nombre?.type === "required" && <p>Campo requerido</p>}
+        </InputText2>
+        <Label>Dirección</Label>
+        <InputText2>
+          <input
+            defaultValue={dataempresa?.direccion_fiscal}
+            className="form__field"
+            placeholder="direccion"
+            type="text"
+            {...register("direccion", {
+              required: true,
+            })}
+          />
+          {errors.direccion?.type === "required" && <p>Campo requerido</p>}
+        </InputText2>
+        <Label>Impuesto</Label>
+        <InputText2>
+          <input
+            defaultValue={dataempresa?.impuesto}
+            className="form__field"
+            placeholder="impuesto"
+            type="text"
+            {...register("impuesto", {
+              required: true,
+            })}
+          />
+          {errors.impuesto?.type === "required" && <p>Campo requerido</p>}
+        </InputText2>
+        <Label>Valor impuesto</Label>
+        <InputText2>
+          <input
+            step="0.01"
+            defaultValue={dataempresa?.valor_impuesto}
+            className="form__field"
+            placeholder="valor impuesto"
+            type="number"
+            {...register("valor_impuesto", {
+              required: true,
+            })}
+          />
+          {errors.valor_impuesto?.type === "required" && <p>Campo requerido</p>}
+        </InputText2>
+        <br></br>
+        <Btn1 bgcolor="#0930bb" color="#fff" titulo="GUARDAR CAMBIOS" />
+      </form>
+      <br></br>
+      <section className="advertencia">
+        <Icon className="icono" icon="meteocons:barometer" />
+        <span>
+          los cambios de logo se ven reflejados en el lapso de 10 segundos.
+        </span>
+      </section>
     </Container>
   );
 };
@@ -179,19 +141,19 @@ const Container = styled.div`
     color: #f75510;
     font-weight: 700;
   }
-  .advertencia{
-    background-color:rgba(237, 95, 6, 0.2);
-    border-radius:10px;
-    padding:10px;
-    margin-top:10px;
-    margin:auto;
-    height:70px;
-    display:flex;
+  .advertencia {
+    background-color: rgba(237, 95, 6, 0.2);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    margin: auto;
+    height: 70px;
+    display: flex;
     color: #f75510;
-    width:100%;
-    align-items :center;
-    .icono{
-      font-size:100px;
+    width: 100%;
+    align-items: center;
+    .icono {
+      font-size: 100px;
     }
   }
 `;
@@ -227,7 +189,7 @@ const Avatar = styled.div`
   }
   background-color: #391ebb;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 120 120'%3E%3Cpolygon fill='%23000' fill-opacity='0.19' points='120 0 120 60 90 30 60 0 0 0 0 0 60 60 0 120 60 120 90 90 120 60 120 0'/%3E%3C/svg%3E");
-  animation: ${slideBackground} 10s linear infinite;
+
   background-size: 60px 60px;
   img {
     object-fit: cover;
@@ -235,7 +197,6 @@ const Avatar = styled.div`
   input {
     display: none;
   }
- 
 `;
 
 const AvatarImage = styled.img`
