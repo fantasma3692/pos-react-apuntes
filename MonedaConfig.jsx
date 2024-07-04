@@ -8,53 +8,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEmpresaStore } from "../../../store/EmpresaStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
 
- 
-`;
-
-const Dropdown = styled.div`
-  top: -20px;
-  position: relative;
-`;
-
-const DropdownList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  background: ${({ theme }) => theme.body};
-  color: ${({ theme }) => theme.text};
-  position: absolute;
-  margin-bottom: 15px;
-  top: ${(props) => props.$top};
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  gap: 10px;
-  z-index: 3;
-  height: 230px;
-  width: 95%;
-  overflow: hidden;
-  &:focus {
-    outline: none;
-  }
-`;
-
-const DropdownItem = styled.li`
-  gap: 10px;
-  display: flex;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.bgtotal};
-  }
-`;
 
 export const MonedaConfig = () => {
   const { dataempresa, editarMonedaEmpresa } = useEmpresaStore();
@@ -168,6 +122,53 @@ export const MonedaConfig = () => {
     </Container>
   );
 };
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+ 
+`;
+
+const Dropdown = styled.div`
+  top: -20px;
+  position: relative;
+`;
+
+const DropdownList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  background: ${({ theme }) => theme.body};
+  color: ${({ theme }) => theme.text};
+  position: absolute;
+  margin-bottom: 15px;
+  top: ${(props) => props.$top};
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  gap: 10px;
+  z-index: 3;
+  height: 230px;
+  width: 95%;
+  overflow: hidden;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const DropdownItem = styled.li`
+  gap: 10px;
+  display: flex;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.bgtotal};
+  }
+`;
 const Cardselect = styled.section`
   border: 2px solid ${({ theme }) => theme.color2};
   border-radius: 10px;
