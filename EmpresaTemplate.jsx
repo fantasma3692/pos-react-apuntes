@@ -40,8 +40,6 @@ const Main = styled.div`
   justify-content: center;
   width: 100%;
   display: flex;
-
-  height: 100vh;
 `;
 const PageContainer = styled.div`
   display: flex;
