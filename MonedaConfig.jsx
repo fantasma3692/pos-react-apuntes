@@ -24,7 +24,7 @@ export const MonedaConfig = () => {
     const countryInfo = getAllInfoByISO(country.iso);
     setSelectedCountry({ ...country, currency: countryInfo.currency });
     setSearch(country.name);
-     console.log(selectedCountry)
+  
     mutate.mutateAsync();
    
   };
@@ -43,7 +43,7 @@ export const MonedaConfig = () => {
     await editarMonedaEmpresa(p);
   };
   const mutate = useMutation({
-    mutationKey: "editar empresa",
+    mutationKey: "editar empresa moneda",
     mutationFn: editar,
     onSuccess: () => {
       queryClient.invalidateQueries('mostrar empresa');
